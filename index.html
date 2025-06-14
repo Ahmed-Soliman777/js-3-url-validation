@@ -1,0 +1,57 @@
+<html>
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+    <h1 class="text-center text-capitalize position-relative">bookmarker</h1>
+    <hr>
+    <h2 class="text-center my-4 pt-5">
+      <i class="fa-solid fa-bookmark"></i>
+      Bookmark your favorite sites
+      <i class="fa-solid fa-bookmark"></i>
+    </h2>
+    <form class="mb-5 pb-3">
+      <label class="fs-4 my-2">
+        <i class="fa-solid fa-book-bookmark"></i>
+        Site Name
+      </label>
+      <input type="email" class="form-control fs-5 mb-4" id="bookmarkId" placeholder="Bookmark Name">
+      <label class="fs-4 my-2">
+        <i class="fa-solid fa-link"></i>
+        Site URL
+      </label>
+      <input type="email" class="form-control fs-5 mb-4" id="websiteUrlId" placeholder="Website URL" >
+      <button type="button" class="btn btn-danger text-capitalize px-5 py-2 d-block mx-auto fs-5"
+        id="submitBtnId" onclick="addBtn()">submit</button>
+    </form>
+    <hr class="my-4">
+    <table class="table mt-4 text-center bg-light">
+      <thead>
+        <th class="fs-5">Index</th>
+        <th class="fs-5">Website Name</th>
+        <th class="fs-5">Visit </th>
+        <th class="fs-5">Delete</th>
+      </thead>
+      <tbody id="webData">
+      </tbody>
+    </table>
+  </div>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
