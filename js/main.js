@@ -5,7 +5,8 @@ var bookmarkInput = document.getElementById("bookmarkId"),
   deleteBtn = document.getElementById("DeleteBtnId"),
   tableList = [],
   nameRegex = /^\w{3,}(\s+\w+)*$/,
-  urlRegex = /^(https?:\/\/)?(w{3}\.)?\w+\.\w{2,}\/?(:\d{2,5})?(\/\w+)*$/;
+  urlRegex = /^(https?:\/\/)?(w{3}\.)?\w+\.\w{2,}\/?(:\d{2,5})?(\/\w+)*$/,
+  testRegex, element
 
 
 
@@ -14,21 +15,12 @@ if (localStorage.getItem("element") != null) {
   display()
 }
 
-function addBtn() {
-  var elements = {
-    bookmarkName: bookmarkInput.value,
-    websiteUrl: websiteUrlInput.value,
-  }
-  tableList.push(elements)
-  localStorage.setItem("element", JSON.stringify(tableList))
-  display()
-}
-
 function dropBtn(index) {
   tableList.splice(index, 1)
   localStorage.setItem("element", JSON.stringify(tableList))
   display()
 }
+//            <a href="https://`+ tableList[i].websiteUrl + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()">
 
 function display() {
   var htmlDisplay = ''
@@ -37,8 +29,8 @@ function display() {
           <td class="align-middle fs-4">`+ (i + 1) + `</td>
           <td class="align-middle fs-4">`+ tableList[i].bookmarkName + `</td>
           <td class="align-middle fs-4">
-            <a href="https://`+ tableList[i].websiteUrl + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()">
-              <i class="fa-solid fa-eye"></i>
+            <a href="` + (tableList[i].websiteUrl.includes("https://") ? tableList[i].websiteUrl : "https://" + tableList[i].websiteUrl) + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()"> 
+            <i class="fa-solid fa-eye"></i>
               Visit
             </a>
           </td>
@@ -52,7 +44,7 @@ function display() {
   }
   document.getElementById("webData").innerHTML = htmlDisplay
 }
-
+// ----------------------------------------------------------
 bookmarkInput.addEventListener("input", function () {
   validate(bookmarkInput, nameRegex);
 });
@@ -61,13 +53,43 @@ websiteUrlInput.addEventListener("input", function () {
   validate(websiteUrlInput, urlRegex);
 });
 
-function validate(element, regex) {
-  var testRegex = regex;
-  if (testRegex.test(element.value)) {
-    element.classList.add("is-valid");
-    element.classList.remove("is-invalid");
+function validate(input, regex) {
+  testRegex = regex;
+  element = input
+  if (testRegex.test(input.value) == true) {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
   } else {
-    element.classList.add("is-invalid");
-    element.classList.remove("is-valid");
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
   }
 }
+
+function addBtn() {
+  var elements = {
+    bookmarkName: bookmarkInput.value,
+    websiteUrl: websiteUrlInput.value,
+  }
+  if (bookmarkInput.classList.contains("is-valid") == true && websiteUrlInput.classList.contains("is-valid") == true) {
+    tableList.push(elements)
+    localStorage.setItem("element", JSON.stringify(tableList))
+    display()
+    clearInput()
+  }
+  else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!"
+    });
+  }
+}
+
+function clearInput() {
+  bookmarkInput.value = "";
+  websiteUrlInput.value = "";
+  bookmarkInput.classList.remove("is-valid")
+  websiteUrlInput.classList.remove("is-valid")
+}
+// `<a ` + tableList[i].websiteUrl.contain("https://") ? +` href=" ` + tableList[i].websiteUrl : `href="https://` + tableList[i].websiteUrl + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()">`
+//
