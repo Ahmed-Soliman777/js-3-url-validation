@@ -6,7 +6,7 @@ var bookmarkInput = document.getElementById("bookmarkId"),
   tableList = [],
   nameRegex = /^\w{3,}(\s+\w+)*$/,
   urlRegex = /^(https?:\/\/)?(w{3}\.)?\w+\.\w{2,}\/?(:\d{2,5})?(\/\w+)*$/,
-  testRegex, element
+  testRegex, element, updateIndex = 0, deletedIndex = false
 
 
 
@@ -16,12 +16,41 @@ if (localStorage.getItem("element") != null) {
 }
 
 function dropBtn(index) {
-  tableList.splice(index, 1)
-  localStorage.setItem("element", JSON.stringify(tableList))
-  display()
-}
-//            <a href="https://`+ tableList[i].websiteUrl + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()">
+  // Check if editing mode is active by checking btnFlex display style
+  var isEditing = document.getElementById("btnFlex").style.display === "flex";
 
+  if (isEditing) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You are currently editing. Do you want to delete this bookmark?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        tableList.splice(index, 1);
+        localStorage.setItem("element", JSON.stringify(tableList));
+        display();
+        Swal.fire(
+          'Deleted!',
+          'Your bookmark has been deleted.',
+          'success'
+        );
+        // Also cancel editing mode if deleting the item being edited
+        if (updateIndex === index) {
+          cancelFunction();
+        }
+      }
+    });
+  } else {
+    tableList.splice(index, 1);
+    localStorage.setItem("element", JSON.stringify(tableList));
+    display();
+  }
+}
 function display() {
   var htmlDisplay = ''
   for (var i = 0; i < tableList.length; i++) {
@@ -40,9 +69,46 @@ function display() {
               Delete
             </button>
           </td>
+          <td>
+            <button class="btn btn-primary fs-5 " id="EditBtnId" onclick="editBtn(`+ i + `)">
+              <i class="fa-solid fa-pen-to-square"></i>
+              Edit
+            </button>
+          </td>
         </tr>`
   }
   document.getElementById("webData").innerHTML = htmlDisplay
+}
+function searchItem() {
+  var searchValue = document.getElementById("searchInput").value.toLowerCase(),
+    html = ""
+  for (var i = 0; i < tableList.length; i++) {
+    if (tableList[i].bookmarkName.toLowerCase().includes(searchValue)) {
+      html += `<tr>
+          <td class="align-middle fs-4">`+ (i + 1) + `</td>
+          <td class="align-middle fs-4">`+ tableList[i].bookmarkName + `</td>
+          <td class="align-middle fs-4">
+            <a href="` + (tableList[i].websiteUrl.includes("https://") ? tableList[i].websiteUrl : "https://" + tableList[i].websiteUrl) + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()"> 
+            <i class="fa-solid fa-eye"></i>
+              Visit
+            </a>
+          </td>
+          <td>
+            <button class="btn btn-danger fs-5 " id="DeleteBtnId" onclick="dropBtn(`+ i + `)">
+              <i class="fa-solid fa-trash"></i>
+              Delete
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-primary fs-5 " id="EditBtnId" onclick="editBtn(`+ i + `)">
+              <i class="fa-solid fa-pen-to-square"></i>
+              Edit
+            </button>
+          </td>
+        </tr>`
+    }
+  }
+  document.getElementById("webData").innerHTML = html
 }
 // ----------------------------------------------------------
 bookmarkInput.addEventListener("input", function () {
@@ -91,5 +157,47 @@ function clearInput() {
   bookmarkInput.classList.remove("is-valid")
   websiteUrlInput.classList.remove("is-valid")
 }
-// `<a ` + tableList[i].websiteUrl.contain("https://") ? +` href=" ` + tableList[i].websiteUrl : `href="https://` + tableList[i].websiteUrl + `" class="btn btn-success fs-5" id="visitBtnId" onclick="visitWebSiteBtn()">`
-//
+
+function editBtn(index) {
+  updateIndex = index
+  bookmarkInput.value = tableList[index].bookmarkName
+  websiteUrlInput.value = tableList[index].websiteUrl
+
+  document.getElementById("submitBtnId").style.display = "none"
+
+  document.getElementById("btnFlex").style.display = "flex"
+  document.getElementById("btnFlex").style.alignItems = "center"
+
+  
+}
+
+function update() {
+
+  tableList[updateIndex].bookmarkName = bookmarkInput.value
+  tableList[updateIndex].websiteUrl = websiteUrlInput.value
+
+  localStorage.setItem("element", JSON.stringify(tableList))
+  display()
+
+  document.getElementById("btnFlex").style.display = "none"
+  document.getElementById("submitBtnId").style.display = "flex"
+  document.getElementById("submitBtnId").style.alignItems = "center"
+
+  Swal.fire({
+    icon: "success",
+    title: "Thumbs up!",
+    text: "Bookmark updated successfully!"
+  });
+
+  clearInput()
+}
+
+function cancelFunction() {
+
+  document.getElementById("btnFlex").style.display = "none"
+
+  document.getElementById("submitBtnId").style.alignItems = "center"
+  document.getElementById("submitBtnId").style.display = "flex"
+
+  clearInput()
+}

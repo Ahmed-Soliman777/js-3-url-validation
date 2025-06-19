@@ -34,17 +34,26 @@
         <i class="fa-solid fa-link"></i>
         Site URL
       </label>
-      <input type="email" class="form-control fs-5 mb-4" id="websiteUrlId" placeholder="Website URL" >
-      <button type="button" class="btn btn-danger text-capitalize px-5 py-2 d-block mx-auto fs-5"
-        id="submitBtnId" onclick="addBtn()">submit</button>
+      <input type="email" class="form-control fs-5 mb-4" id="websiteUrlId" placeholder="Website URL">
+      <button type="button" class="btn btn-danger text-capitalize px-5 py-2 mx-auto fs-5" id="submitBtnId"
+        onclick="addBtn()" style="display: flex; align-items: center;">submit</button>
+      <div id="btnFlex" style="display: none;">
+        <button type="button" class="btn btn-primary text-capitalize px-5 py-2 mx-auto fs-5" id="updateBtn"
+          onclick="update()">edit</button>
+        <button type="button" class="btn btn-danger text-capitalize px-5 py-2 mx-auto fs-5" id="cancelBtn"
+          onclick="cancelFunction()">cancel</button>
+      </div>
     </form>
     <hr class="my-4">
+    <input type="text" class="form-control fs-5 mb-4" id="searchInput" placeholder="Search for bookmark"
+      oninput="searchItem()">
     <table class="table mt-4 text-center bg-light">
       <thead>
         <th class="fs-5">Index</th>
         <th class="fs-5">Website Name</th>
         <th class="fs-5">Visit </th>
         <th class="fs-5">Delete</th>
+        <th class="fs-5">Edit</th>
       </thead>
       <tbody id="webData">
       </tbody>
