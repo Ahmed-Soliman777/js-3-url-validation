@@ -49,6 +49,13 @@ function dropBtn(index) {
     tableList.splice(index, 1);
     localStorage.setItem("element", JSON.stringify(tableList));
     display();
+
+    Swal.fire({
+      icon: "success",
+      title: 'Bookmark deleted',
+      text: 'Your bookmark has been deleted.',
+    })
+
   }
 }
 function display() {
